@@ -1,0 +1,315 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap');
+
+@layer base {
+  body {
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    background-color: #000000;
+    color: #00ff00;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    image-rendering: pixelated;
+    text-rendering: geometricPrecision;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+
+  /* CRT Effect */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      transparent 50%, 
+      rgba(0, 255, 0, 0.03) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 1000;
+    animation: scanlines 0.1s linear infinite;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.4) 100%),
+      linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.01) 50%, transparent);
+    pointer-events: none;
+    z-index: 999;
+    animation: flicker 2s infinite alternate;
+  }
+
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #000000;
+    border: 1px solid #00ff00;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #00ff00;
+    border: 1px solid #000000;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00cc00;
+  }
+}
+
+@layer components {
+  .terminal-text {
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 5px #00ff00;
+  }
+
+  .terminal-title {
+    font-family: 'Orbitron', 'Share Tech Mono', monospace;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+  }
+  
+  .terminal-screen {
+    background: #000000;
+    border: 4px solid #00ff00;
+    border-radius: 12px;
+    box-shadow: 
+      0 0 20px #00ff00,
+      inset 0 0 20px rgba(0, 255, 0, 0.1),
+      0 0 40px rgba(0, 255, 0, 0.3);
+    position: relative;
+  }
+
+  .terminal-bezel {
+    background: linear-gradient(145deg, #333333, #1a1a1a);
+    border: 3px solid #666666;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 
+      inset 0 0 20px rgba(0, 0, 0, 0.8),
+      0 5px 15px rgba(0, 0, 0, 0.5);
+  }
+
+  .crt-flicker {
+    animation: crtFlicker 0.15s infinite linear alternate;
+  }
+  
+  .typing-cursor::after {
+    content: '█';
+    color: #00ff00;
+    animation: blink 1s infinite;
+    margin-left: 2px;
+    text-shadow: 0 0 5px #00ff00;
+  }
+  
+  .message-glow {
+    text-shadow: 0 0 3px #00ff00;
+    animation: textGlow 3s ease-in-out infinite alternate;
+  }
+
+  .terminal-input {
+    background: #000000;
+    border: 2px solid #00ff00;
+    color: #00ff00;
+    font-family: 'Share Tech Mono', monospace;
+    text-shadow: 0 0 3px #00ff00;
+    box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.1);
+  }
+
+  .terminal-input:focus {
+    outline: none;
+    border-color: #00ff00;
+    box-shadow: 
+      inset 0 0 10px rgba(0, 255, 0, 0.2),
+      0 0 15px #00ff00;
+  }
+
+  .terminal-button {
+    background: #000000;
+    border: 2px solid #00ff00;
+    color: #00ff00;
+    font-family: 'Share Tech Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 3px #00ff00;
+    transition: all 0.2s ease;
+  }
+
+  .terminal-button:hover:not(:disabled) {
+    background: #00ff00;
+    color: #000000;
+    text-shadow: none;
+    box-shadow: 0 0 15px #00ff00;
+  }
+
+  .terminal-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .stat-bar {
+    background: #000000;
+    border: 1px solid #00ff00;
+    height: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-fill {
+    height: 100%;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px currentColor;
+    animation: pulse 2s infinite;
+  }
+
+  .ascii-border {
+    border: 2px solid #00ff00;
+    background: #000000;
+    position: relative;
+  }
+
+  .ascii-border::before {
+    content: "┌─────────────────────────────────────────┐";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    color: #00ff00;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .phosphor-green {
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+  }
+
+  .phosphor-amber {
+    color: #ffaa00;
+    text-shadow: 0 0 5px #ffaa00;
+  }
+
+  .phosphor-white {
+    color: #ffffff;
+    text-shadow: 0 0 5px #ffffff;
+  }
+
+  .retro-grid {
+    background-image: 
+      linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Animaciones retro */
+  @keyframes scanlines {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(4px); }
+  }
+
+  @keyframes flicker {
+    0% { opacity: 1; }
+    98% { opacity: 1; }
+    99% { opacity: 0.98; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes crtFlicker {
+    0% { opacity: 1; }
+    98% { opacity: 1; }
+    99% { opacity: 0.99; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  @keyframes textGlow {
+    0% { text-shadow: 0 0 3px #00ff00; }
+    100% { text-shadow: 0 0 8px #00ff00, 0 0 12px #00ff00; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+
+  @keyframes fadeIn {
+    from { 
+      opacity: 0; 
+      transform: translateY(10px);
+      filter: blur(1px);
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from { 
+      transform: translateY(20px); 
+      opacity: 0;
+      filter: blur(2px);
+    }
+    to { 
+      transform: translateY(0); 
+      opacity: 1;
+      filter: blur(0);
+    }
+  }
+
+  @keyframes bootup {
+    0% { 
+      opacity: 0;
+      transform: scale(0.95);
+      filter: blur(3px);
+    }
+    50% {
+      opacity: 0.7;
+      filter: blur(1px);
+    }
+    100% { 
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+    }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .slide-up {
+    animation: slideUp 0.5s ease-out;
+  }
+
+  .bootup {
+    animation: bootup 2s ease-out;
+  }
+}
